@@ -1,29 +1,29 @@
-import { initializeApp } from "firebase/app";
-import { child, get, getDatabase, ref } from "firebase/database";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import Login from "./pages/Login";
+import MyInfo from "./pages/MyInfo";
+import SalaryHistory from "./pages/SalaryHistory";
+import CorrectionApply from "./pages/CorrectionApply";
+import CorrectionApplyHistory from "./pages/CorrectionApplyHistory";
+import WorkManagement from "./pages/WorkManagement";
 
 const App = () => {
-  const firebaseConfig = {
-    databaseURL: import.meta.env.VITE_DATABASE_URL,
-  };
-  const app = initializeApp(firebaseConfig);
-
-  const database = getDatabase(app);
-
-  //파이어베이스 데이터 불러오는 코드
-  const dbRef = ref(database);
-  //사원번호 001인 직원의 정보를 불러오는 코드입니다.
-  get(child(dbRef, `users/001`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-      } else {
-        console.log("No data available");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return <></>;
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/MyInfo" element={<MyInfo />} />
+        <Route path="/SalaryHistory" element={<SalaryHistory />} />
+        <Route path="/CorrectionApply" element={<CorrectionApply />} />
+        <Route
+          path="/CorrectionApplyHistory"
+          element={<CorrectionApplyHistory />}
+        />
+        <Route path="/WorkManagement" element={<WorkManagement />} />
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default App;
