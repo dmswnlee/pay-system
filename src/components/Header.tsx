@@ -1,9 +1,26 @@
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import logo from "../assets/logo.png";
+
+const Nav = styled.nav`
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border-bottom: 1px solid #e0e2e7;
+`;
+
+const MainMenu = styled.ul`
+  display: flex;
+  gap: 20px;
+`;
 
 const Header: React.FC = () => {
   return (
-    <nav>
-      <ul>
+    <Nav>
+      <div>
+        <img src={logo} alt="logo" />
+      </div>
+      <MainMenu>
         <li>
           <Link to="/">로그인</Link>
         </li>
@@ -22,8 +39,8 @@ const Header: React.FC = () => {
         <li>
           <Link to="/WorkManagement">업무 관리</Link>
         </li>
-      </ul>
-    </nav>
+      </MainMenu>
+    </Nav>
   );
 };
 
