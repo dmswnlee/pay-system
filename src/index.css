@@ -20,12 +20,3 @@
 html {
   height: 100vh;
 }
-
-h5 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border: 1px solid #e0e2e7;
-  border-radius: 10px;
-  font-weight: bold;
-}
