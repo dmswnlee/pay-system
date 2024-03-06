@@ -7,6 +7,8 @@ import CorrectionApply from "./pages/CorrectionApply";
 import CorrectionApplyHistory from "./pages/CorrectionApplyHistory";
 import WorkManagement from "./pages/WorkManagement";
 import styled from "styled-components";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const Inner = styled.div`
   width: 1100px;
@@ -17,20 +19,22 @@ const Inner = styled.div`
 const App = () => {
   return (
     <BrowserRouter>
-      <Header />
-      <Inner>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/MyInfo" element={<MyInfo />} />
-          <Route path="/SalaryHistory" element={<SalaryHistory />} />
-          <Route path="/CorrectionApply" element={<CorrectionApply />} />
-          <Route
-            path="/CorrectionApplyHistory"
-            element={<CorrectionApplyHistory />}
-          />
-          <Route path="/WorkManagement" element={<WorkManagement />} />
-        </Routes>
-      </Inner>
+      <Provider store={store}>
+        <Header />
+        <Inner>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/MyInfo" element={<MyInfo />} />
+            <Route path="/SalaryHistory" element={<SalaryHistory />} />
+            <Route path="/CorrectionApply" element={<CorrectionApply />} />
+            <Route
+              path="/CorrectionApplyHistory"
+              element={<CorrectionApplyHistory />}
+            />
+            <Route path="/WorkManagement" element={<WorkManagement />} />
+          </Routes>
+        </Inner>
+      </Provider>
     </BrowserRouter>
   );
 };
