@@ -22,20 +22,22 @@ const Inner = styled.div`
 const App = () => {
   return (
     <BrowserRouter>
-      <Header />
-      <Inner>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/MyInfo" element={<MyInfo />} />
-          <Route path="/SalaryHistory" element={<SalaryHistory />} />
-          <Route path="/CorrectionApply" element={<CorrectionApply />} />
-          <Route
-            path="/CorrectionApplyHistory"
-            element={<CorrectionApplyHistory />}
-          />
-          <Route path="/WorkManagement" element={<WorkManagement />} />
-        </Routes>
-      </Inner>
+      <Provider store={store}>
+        <Header />
+        <Inner>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/MyInfo" element={<MyInfo />} />
+            <Route path="/SalaryHistory" element={<SalaryHistory />} />
+            <Route path="/CorrectionApply" element={<CorrectionApply />} />
+            <Route
+              path="/CorrectionApplyHistory"
+              element={<CorrectionApplyHistory />}
+            />
+            <Route path="/WorkManagement" element={<WorkManagement />} />
+          </Routes>
+        </Inner>
+      </Provider>
     </BrowserRouter>
   );
 };
