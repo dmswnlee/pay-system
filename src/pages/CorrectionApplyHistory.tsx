@@ -20,11 +20,13 @@ const Row = styled.div`
 const TopText = styled.span`
   font-weight: 700;
   padding: 12px 24px;
+  color: #2d3748;
 `;
 
 const Text = styled.span`
   padding: 12px 24px;
   border-top: solid 1px #e2e8f0;
+  color: #2d3748;
 `;
 const CorrectionApplyHistory = () => {
   return (
@@ -36,6 +38,18 @@ const CorrectionApplyHistory = () => {
           <TopText>내용</TopText>
           <TopText>비고</TopText>
           <TopText>상태</TopText>
+        </Row>
+        <Row>
+          <Text>2024.02.02</Text>
+          <Text>보너스 미지급</Text>
+          <Text></Text>
+          <Text>결제 대기</Text>
+        </Row>
+        <Row>
+          <Text>2024.02.02</Text>
+          <Text>보너스 미지급</Text>
+          <Text></Text>
+          <Text>결제 대기</Text>
         </Row>
         <Row>
           <Text>2024.02.02</Text>
