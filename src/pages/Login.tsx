@@ -1,14 +1,22 @@
+import { FormEvent, useEffect } from "react";
+import { Dispatch } from "redux";
+import { useDispatch, useSelector } from "react-redux";
+import { SetCurrentUserAction, setCurrentUser } from "../redux/store";
+import { authService } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { FormEvent, useState } from "react";
-import { authService } from "../firebase";
 
 const Login = () => {
-  const [currentUser, setCurrentUser] = useState<string | null>(null);
-  //회원가입
+  const dispatch: Dispatch<SetCurrentUserAction> = useDispatch();
+
+  const currentUser: string | null = useSelector(
+    (state: { currentUser: string | null }) => state.currentUser,
+  );
+
+  // 회원가입
   const signUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -18,9 +26,9 @@ const Login = () => {
 
     await createUserWithEmailAndPassword(authService, email, password);
   };
-  //회원가입
+  // 회원가입
 
-  //로그인
+  // 로그인
   const logIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -30,24 +38,28 @@ const Login = () => {
 
     await signInWithEmailAndPassword(authService, email, password);
   };
-  //로그인
+  // 로그인
 
-  //로그아웃
+  // 로그아웃
   const logOut = () => {
     authService.signOut();
+    dispatch(setCurrentUser(null));
   };
-  //로그아웃
+  // 로그아웃
 
-  //사용자 아이디 조회
-  onAuthStateChanged(authService, (user) => {
-    if (user) {
-      setCurrentUser(user.uid);
-    } else {
-      setCurrentUser(null);
-    }
-    console.log(currentUser);
-  });
-  //사용자 아이디 조회
+  // useEffect를 사용하여 로그인 상태 변화 감지
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(authService, (user) => {
+      if (user) {
+        dispatch(setCurrentUser(user.uid));
+      } else {
+        dispatch(setCurrentUser(null));
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch]);
+  console.log(currentUser);
+  // useEffect를 사용하여 로그인 상태 변화 감지
 
   return (
     <>
@@ -66,7 +78,7 @@ const Login = () => {
           <input type="password" name="password" placeholder="비밀번호" />
           <button type="submit">로그인</button>
         </form>
-        {currentUser && <button onClick={logOut}>로그아웃</button>}
+        {currentUser && <button onClick={logOut}>로그아웃</button>}{" "}
       </div>
     </>
   );
