@@ -1,3 +1,4 @@
+import { Provider } from 'react-redux';
 import {
   BrowserRouter,
   Route,
@@ -12,6 +13,7 @@ import Login from './pages/Login';
 import MyInfo from './pages/MyInfo';
 import SalaryHistory from './pages/SalaryHistory';
 import WorkManagement from './pages/WorkManagement';
+import store from './redux/store';
 
 const Inner = styled.div`
   width: 1100px;
