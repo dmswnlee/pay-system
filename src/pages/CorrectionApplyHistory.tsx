@@ -81,6 +81,7 @@ const CorrectionApplyHistory = () => {
         setInfo(datas);
       });
     };
+    console.log(user?.uid);
     fetchTweets();
     return () => {
       unsubscribe && unsubscribe();
