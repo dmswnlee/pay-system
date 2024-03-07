@@ -1,6 +1,7 @@
 import { Button, CloseButton } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import styled from "styled-components";
+import { Employee, Salary } from "../pages/SalaryHistory";
 
 const ModalContainer = styled.div`
   width: 100%;
@@ -55,9 +56,19 @@ const IsModalCloseButton = styled.div`
   right: 20px;
 `;
 
-const SalaryDetailModal = () => {
+interface SalaryDetailModalProps {
+  employees: Employee[];
+  salaryData: Salary[];
+}
+
+const SalaryDetailModal = ({
+  employees,
+  salaryData,
+}: SalaryDetailModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isModalClose = useRef<HTMLDivElement>(null);
+
+  console.log(employees, salaryData);
 
   const handleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -69,6 +80,9 @@ const SalaryDetailModal = () => {
     }
   };
 
+  const employee = employees[0]; 
+  const salary = salaryData[0]; 
+
   return (
     <>
       <Button colorScheme="teal" size="sm" onClick={handleModal}>
@@ -77,7 +91,7 @@ const SalaryDetailModal = () => {
       {isModalOpen && (
         <ModalContainer ref={isModalClose} onClick={handleModalClose}>
           <ModalContent>
-            <ModalTitle>2024.02.02 급여내역</ModalTitle>
+            <ModalTitle>{salary.payrollDate} 급여내역</ModalTitle>
             <IsModalCloseButton>
               <CloseButton onClick={handleModal} />
             </IsModalCloseButton>
@@ -85,21 +99,21 @@ const SalaryDetailModal = () => {
               <tbody>
                 <tr>
                   <TableTitle>사원번호</TableTitle>
-                  <TableContent>001</TableContent>
+                  <TableContent>{employee.memNo}</TableContent>
                   <TableTitle>성명</TableTitle>
-                  <TableContent>이은주</TableContent>
+                  <TableContent>{employee.name}</TableContent>
                 </tr>
                 <tr>
                   <TableTitle>부서</TableTitle>
-                  <TableContent>개발1팀</TableContent>
+                  <TableContent>{employee.team}</TableContent>
                   <TableTitle>직급</TableTitle>
-                  <TableContent>사원</TableContent>
+                  <TableContent>{employee.position}</TableContent>
                 </tr>
                 <tr>
                   <TableTitle>입사일</TableTitle>
-                  <TableContent>2023.02.02</TableContent>
+                  <TableContent>{employee.dateOfJoin}</TableContent>
                   <TableTitle>지급일자</TableTitle>
-                  <TableContent>2024.02.02</TableContent>
+                  <TableContent>{salary.payrollDate}</TableContent>
                 </tr>
               </tbody>
             </TableContainer>
@@ -107,11 +121,11 @@ const SalaryDetailModal = () => {
               <tbody>
                 <tr>
                   <TableTitle>지급총액</TableTitle>
-                  <TableContent>3,000,000</TableContent>
+                  <TableContent>{salary.totalPaymentAmount}</TableContent>
                   <TableTitle>공제총액</TableTitle>
-                  <TableContent>300,000</TableContent>
+                  <TableContent>{salary.netPaymentAmount}</TableContent>
                   <TableTitle>실지급액</TableTitle>
-                  <TableContent>2,700,000</TableContent>
+                  <TableContent>{salary.netPaymentAmount}</TableContent>
                 </tr>
               </tbody>
             </TableContainer>
@@ -126,19 +140,19 @@ const SalaryDetailModal = () => {
               <tbody>
                 <tr>
                   <TableTitle>소득세</TableTitle>
-                  <TableContent>45,000</TableContent>
+                  <TableContent>{salary.incomeTax}</TableContent>
                 </tr>
                 <tr>
                   <TableTitle>국민연금</TableTitle>
-                  <TableContent>85,000</TableContent>
+                  <TableContent>{salary.nationalPension}</TableContent>
                 </tr>
                 <tr>
                   <TableTitle>건강보험</TableTitle>
-                  <TableContent>100,000</TableContent>
+                  <TableContent>{salary.healthInsurance}</TableContent>
                 </tr>
                 <tr>
                   <TableTitle>고용보험</TableTitle>
-                  <TableContent>70,000</TableContent>
+                  <TableContent>{salary.employmentInsurance}</TableContent>
                 </tr>
               </tbody>
             </TableContainer>
