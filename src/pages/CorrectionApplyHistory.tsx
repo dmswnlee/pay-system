@@ -1,4 +1,21 @@
+import {
+  useEffect,
+  useState,
+} from 'react';
+
+import { Unsubscribe } from 'firebase/auth';
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+} from 'firebase/firestore';
 import styled from 'styled-components';
+
+import {
+  authService,
+  firestoreService,
+} from '../firebase';
 
 const Title = styled.h1`
   font-size: 32px;
@@ -28,7 +45,49 @@ const Text = styled.span`
   border-top: solid 1px #e2e8f0;
   color: #2d3748;
 `;
+
+export interface HistoryType {
+  applyDate: string;
+  content: string;
+  status: string;
+  uid: string;
+  id: string;
+}
 const CorrectionApplyHistory = () => {
+  const user = authService.currentUser;
+  const [info, setInfo] = useState<HistoryType[]>();
+
+  useEffect(() => {
+    let unsubscribe: Unsubscribe | null;
+    const fetchTweets = async () => {
+      const historyQuery = query(
+        collection(firestoreService, "correctionapplyhistory"),
+        where("uid", "==", user?.uid),
+        // orderBy("createdAt", "desc"),
+        // limit(10),
+      );
+
+      unsubscribe = await onSnapshot(historyQuery, (snapshot) => {
+        const datas = snapshot.docs.map((doc) => {
+          const { applyDate, content, status, uid } = doc.data();
+          return {
+            applyDate,
+            content,
+            status,
+            uid,
+            id: doc.id,
+          };
+        });
+        setInfo(datas);
+      });
+    };
+    console.log(user?.uid);
+    fetchTweets();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
+
   return (
     <div>
       <Title>정정 내역</Title>
@@ -40,23 +99,25 @@ const CorrectionApplyHistory = () => {
           <TopText>상태</TopText>
         </Row>
         <Row>
-          <Text>2024.02.02</Text>
+          <Text>23.12.12</Text>
           <Text>보너스 미지급</Text>
           <Text></Text>
           <Text>결제 대기</Text>
         </Row>
         <Row>
-          <Text>2024.02.02</Text>
+          <Text>24.12.22</Text>
           <Text>보너스 미지급</Text>
           <Text></Text>
           <Text>결제 대기</Text>
         </Row>
-        <Row>
-          <Text>2024.02.02</Text>
-          <Text>보너스 미지급</Text>
-          <Text></Text>
-          <Text>결제 대기</Text>
-        </Row>
+        {info?.map((info) => (
+          <Row key={info.id}>
+            <Text>{info.applyDate}</Text>
+            <Text>{info.content}</Text>
+            <Text></Text>
+            <Text>{info.status}</Text>
+          </Row>
+        ))}
       </Box>
     </div>
   );

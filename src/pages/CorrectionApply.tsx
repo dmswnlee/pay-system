@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
+import {
+  addDoc,
+  collection,
+} from 'firebase/firestore';
 import styled from 'styled-components';
 
 import {
   Button,
   Select,
+  useDisclosure,
 } from '@chakra-ui/react';
 
+import MyModal from '../components/MyModal';
 import Title from '../components/Title';
+import {
+  authService,
+  firestoreService,
+} from '../firebase';
 
 const Wrapper = styled.div`
   padding-top: 58px;
@@ -30,6 +40,7 @@ const TextArea = styled.textarea`
   border: solid 1px #e2e8f0;
   border-radius: 12px;
   margin-bottom: 64px;
+  padding: 16px;
 `;
 const ButtonWrap = styled.div`
   display: flex;
@@ -46,7 +57,7 @@ const CorrectionApply = () => {
 
   const year = Array.from(
     { length: endYear - startYear + 1 },
-    (_, index) => startYear + index + "년",
+    (_, index) => endYear - index + "년",
   );
   const month = Array.from(
     { length: 12 - 1 + 1 },
@@ -58,9 +69,9 @@ const CorrectionApply = () => {
   );
 
   const [form, setForm] = useState({
-    year: "",
-    month: "",
-    day: "",
+    year: "2024년",
+    month: "1월",
+    day: "1일",
     context: "",
   });
   const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,43 +82,79 @@ const CorrectionApply = () => {
     setForm({ ...form, month: event.target.value });
   };
   const handleDayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setForm({ ...form, month: event.target.value });
+    setForm({ ...form, day: event.target.value });
   };
   const handleContextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setForm({ ...form, context: event.target.value });
   };
-
-  const onSubmit = () => {
-    if (false) {
+  const user = authService.currentUser;
+  const formatDate = (year: string, month: string, day: string) => {
+    // 각 값이 한 자리 수인 경우 앞에 0을 붙여줍니다.
+    const formattedYear = year.replace(/[^0-9]/g, ""); // "년" 제거
+    const replacedMonth = month.replace(/[^0-9]/g, ""); // "월" 제거
+    const formattedMonth =
+      parseInt(replacedMonth) < 10 ? `0${replacedMonth}` : replacedMonth;
+    const replacedDay = day.replace(/[^0-9]/g, "");
+    const formattedDay =
+      parseInt(replacedDay) < 10 ? `0${replacedDay}` : replacedDay;
+    // "년.월.일" 형식의 문자열을 반환합니다.
+    return `${formattedYear}.${formattedMonth}.${formattedDay}`;
+  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [modalText, setModalText] = useState("");
+  const onSubmit = async () => {
+    if (form.year === "" || form.context === "") {
+      setModalText("내용을 입력 해주세요.");
+      onOpen();
     } else {
-      console.log(form.year, form.month, form.day, form.context);
-
-      alert("성공!");
+      try {
+        const doc = await addDoc(
+          collection(firestoreService, "correctionapplyhistory"),
+          {
+            applyDate: formatDate(form.year, form.month, form.day),
+            content: form.context,
+            uid: user?.uid,
+            status: "대기",
+          },
+        );
+        console.log(form.year, form.month, form.day, form.context);
+        setForm({ year: "2024년", month: "1월", day: "1일", context: "" });
+        setModalText("급여 정정 신청이 완료되었습니다.");
+        onOpen();
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
+
   return (
     <Wrapper>
+      <MyModal isOpen={isOpen} onClose={onClose} text={modalText} />
       <div>
         <Title title="정정신청"></Title>
         <SubTitle>날짜</SubTitle>
         <DateRow>
-          <Select onChange={handleYearChange}>
+          <Select value={form.year} onChange={handleYearChange}>
             {year.map((it, index) => (
-              <option value={form.year} key={index}>
+              <option value={it} key={index}>
                 {it}
               </option>
             ))}
           </Select>
-          <Select onChange={handleMonthChange}>
+          <Select value={form.month} onChange={handleMonthChange}>
             {month.map((it, index) => (
               <option value={it} key={index}>
                 {it}
               </option>
             ))}
           </Select>
-          <Select onChange={handleDayChange}>
+          <Select
+            placeholder="일을 선택해주세요."
+            value={form.day}
+            onChange={handleDayChange}
+          >
             {day.map((it, index) => (
               <option value={it} key={index}>
                 {it}
