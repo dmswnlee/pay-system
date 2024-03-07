@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+import {
+  addDoc,
+  collection,
+} from 'firebase/firestore';
 import styled from 'styled-components';
 
 import {
@@ -8,6 +12,10 @@ import {
 } from '@chakra-ui/react';
 
 import Title from '../components/Title';
+import {
+  authService,
+  firestoreService,
+} from '../firebase';
 
 const Wrapper = styled.div`
   padding-top: 58px;
@@ -71,20 +79,45 @@ const CorrectionApply = () => {
     setForm({ ...form, month: event.target.value });
   };
   const handleDayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setForm({ ...form, month: event.target.value });
+    setForm({ ...form, day: event.target.value });
   };
   const handleContextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setForm({ ...form, context: event.target.value });
   };
-
-  const onSubmit = () => {
+  const user = authService.currentUser;
+  const formatDate = (year: string, month: string, day: string) => {
+    // 각 값이 한 자리 수인 경우 앞에 0을 붙여줍니다.
+    const formattedYear = year.replace(/[^0-9]/g, ""); // "년" 제거
+    const replacedMonth = month.replace(/[^0-9]/g, ""); // "월" 제거
+    const formattedMonth =
+      parseInt(replacedMonth) < 10 ? `0${replacedMonth}` : replacedMonth;
+    const replacedDay = day.replace(/[^0-9]/g, "");
+    const formattedDay =
+      parseInt(replacedDay) < 10 ? `0${replacedDay}` : replacedDay;
+    // "년.월.일" 형식의 문자열을 반환합니다.
+    return `${formattedYear}.${formattedMonth}.${formattedDay}`;
+  };
+  const onSubmit = async () => {
     if (false) {
     } else {
-      console.log(form.year, form.month, form.day, form.context);
-
-      alert("성공!");
+      try {
+        const doc = await addDoc(
+          collection(firestoreService, "correctionapplyhistory"),
+          {
+            applyDate: formatDate(form.year, form.month, form.day),
+            content: form.context,
+            uid: user?.uid,
+            status: "대기",
+          },
+        );
+        console.log(form.year, form.month, form.day, form.context);
+        setForm({ year: "2024년", month: "1월", day: "1일", context: "" });
+        alert("성공!");
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
   return (
@@ -93,21 +126,21 @@ const CorrectionApply = () => {
         <Title title="정정신청"></Title>
         <SubTitle>날짜</SubTitle>
         <DateRow>
-          <Select onChange={handleYearChange}>
+          <Select value={form.year} onChange={handleYearChange}>
             {year.map((it, index) => (
-              <option value={form.year} key={index}>
+              <option value={it} key={index}>
                 {it}
               </option>
             ))}
           </Select>
-          <Select onChange={handleMonthChange}>
+          <Select value={form.month} onChange={handleMonthChange}>
             {month.map((it, index) => (
               <option value={it} key={index}>
                 {it}
               </option>
             ))}
           </Select>
-          <Select onChange={handleDayChange}>
+          <Select value={form.day} onChange={handleDayChange}>
             {day.map((it, index) => (
               <option value={it} key={index}>
                 {it}
