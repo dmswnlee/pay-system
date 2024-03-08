@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -14,8 +15,12 @@ import {
 } from 'firebase/firestore';
 import styled from 'styled-components';
 
-import { Button } from '@chakra-ui/react';
+import {
+  Button,
+  useDisclosure,
+} from '@chakra-ui/react';
 
+import AlertModal from '../components/AlertModal';
 import {
   authService,
   firestoreService,
@@ -102,6 +107,14 @@ const CorrectionApplyHistory = () => {
       unsubscribe && unsubscribe();
     };
   }, []);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+
+  const handleOpen = async (id: string) => {
+    onOpen();
+    setSelectedItemId(id); // 선택된 아이템의 ID 저장
+  };
 
   const onDelete = async (id: string) => {
     // const ok = confirm("정말로 삭제하시겠습니까?");
@@ -115,9 +128,21 @@ const CorrectionApplyHistory = () => {
       //}
     }
   };
-
+  const handleYes = () => {
+    if (selectedItemId) {
+      onDelete(selectedItemId);
+    }
+    onClose();
+  };
   return (
     <div>
+      <AlertModal
+        isOpen={isOpen}
+        handleYes={handleYes}
+        onOpen={onOpen}
+        cancelRef={cancelRef}
+        onClose={onClose}
+      />
       <Title>정정 내역</Title>
       <Box>
         <Row>
@@ -135,7 +160,7 @@ const CorrectionApplyHistory = () => {
             <StatusRow>
               {info.status}
               <Button
-                onClick={() => onDelete(info.id)}
+                onClick={() => handleOpen(info.id)}
                 colorScheme="red"
                 size="xs"
               >
