@@ -44,6 +44,7 @@ const Login = () => {
   const logOut = () => {
     authService.signOut();
     dispatch(setCurrentUser(null));
+    localStorage.removeItem("userInfo");
   };
   // 로그아웃
 
