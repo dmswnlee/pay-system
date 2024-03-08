@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Button,
   Modal,
@@ -27,7 +25,7 @@ const MyModal = ({ isOpen, onClose, text }: ModalType) => {
         <ModalBody>{text}</ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button colorScheme="teal" mr={3} onClick={onClose}>
             확인
           </Button>
         </ModalFooter>

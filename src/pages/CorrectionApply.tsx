@@ -116,7 +116,7 @@ const CorrectionApply = () => {
             applyDate: formatDate(form.year, form.month, form.day),
             content: form.context,
             uid: user?.uid,
-            status: "대기",
+            status: "결제 대기",
           },
         );
         console.log(form.year, form.month, form.day, form.context);
