@@ -1,56 +1,131 @@
-import { createStore, Action } from "redux";
+import { createStore, Action, combineReducers } from "redux";
+import { EventData } from '../pages/WorkManagement';
 
-// 초기 상태 정의 인터페이스
-interface InitialState {
+// 초기 상태 정의
+interface AuthState {
   currentUser: null | string;
 }
-// 초기 상태 정의 인터페이스
+
+interface EventState {
+  events: EventData[];
+}
 
 // 초기 상태 설정
-const initialState: InitialState = {
+const initialAuthState: AuthState = {
   currentUser: null,
 };
-// 초기 상태 설정
+
+const initialEventState: EventState = {
+  events: [],
+};
 
 // 액션 타입 정의
-enum ActionTypes {
-  SET_CURRENT_USER = "SET_CURRENT_USER", // 현재 사용자를 설정하는 액션
+enum AuthActionTypes {
+  SET_CURRENT_USER = "SET_CURRENT_USER", 
 }
-// 액션 타입 정의
+enum EventActionTypes {
+  ADD_EVENT = "ADD_EVENT",
+  DELETE_EVENT = "DELETE_EVENT",
+  EDIT_EVENT = "EDIT_EVENT",
+}
 
-// 액션 생성
+// login 액션 생성
 export interface SetCurrentUserAction extends Action {
-  type: ActionTypes.SET_CURRENT_USER; // 액션의 타입은 SET_CURRENT_USER
-  payload: string | null; // 액션의 페이로드는 문자열 또는 null
+  type: AuthActionTypes.SET_CURRENT_USER;
+  payload: string | null;
 }
-// 액션 생성
 
-// setCurrentUser 액션 생성자 정의
 export const setCurrentUser = (user: string | null): SetCurrentUserAction => ({
-  type: ActionTypes.SET_CURRENT_USER, // 액션 타입 설정
-  payload: user, // 사용자 정보를 페이로드로 설정
+  type: AuthActionTypes.SET_CURRENT_USER,
+  payload: user,
 });
-// setCurrentUser 액션 생성자 정의
 
-// 리듀서 함수 정의
-const reducer = (
-  state: InitialState = initialState, // 초기 상태 설정
-  action: SetCurrentUserAction, // SetCurrentUserAction 타입의 액션
-): InitialState => {
+// workManagement 액션 생성
+export interface AddEventAction {
+  type: EventActionTypes.ADD_EVENT;
+  payload: EventData;
+}
+
+export const addEvent = (event: EventData): AddEventAction => ({
+  type: EventActionTypes.ADD_EVENT,
+  payload: event,
+});
+
+export interface DeleteEventAction {
+  type: EventActionTypes.DELETE_EVENT;
+  payload: string;
+}
+
+export const deleteEvent = (eventId: string): DeleteEventAction => ({
+  type: EventActionTypes.DELETE_EVENT,
+  payload: eventId,
+});
+
+export interface EditEventAction {
+  type: EventActionTypes.EDIT_EVENT;
+  payload: EventData;
+}
+
+export const editEvent = (event: EventData): EditEventAction => ({
+  type: EventActionTypes.EDIT_EVENT,
+  payload: event,
+});
+
+// login 리듀서 함수 정의
+const authReducer = (
+  state: AuthState = initialAuthState,
+  action: SetCurrentUserAction
+): AuthState => {
   switch (action.type) {
-    case ActionTypes.SET_CURRENT_USER: // SET_CURRENT_USER 액션 처리
+    case AuthActionTypes.SET_CURRENT_USER:
       return {
-        ...state, // 이전 상태 유지
-        currentUser: action.payload, // 현재 사용자 정보 갱신
+        ...state,
+        currentUser: action.payload,
       };
     default:
-      return state; // 기본적으로 이전 상태 반환
+      return state;
   }
 };
-// 리듀서 함수 정의
 
-// 리듀서와 초기 상태로 스토어 생성
-const store = createStore(reducer); // 리듀서와 초기 상태로 스토어 생성
-// 리듀서와 초기 상태로 스토어 생성
+// workManagement 리듀서 함수 정의
+const eventReducer = (
+  state: EventState = initialEventState,
+  action: AddEventAction | DeleteEventAction | EditEventAction
+): EventState => {
+  switch (action.type) {
+    case EventActionTypes.ADD_EVENT:
+      return {
+        ...state,
+        events: [action.payload, ...state.events],
+      };
+    case EventActionTypes.DELETE_EVENT:
+      return {
+        ...state,
+        events: state.events.filter((event) => event.id !== action.payload),
+      };
+    case EventActionTypes.EDIT_EVENT:
+      return {
+        ...state,
+        events: state.events.map((event) =>
+          event.id === action.payload.id ? { ...event, title: action.payload.title } : event
+        ),
+      };
+    default:
+      return state;
+  }
+};
+
+export interface RootState {
+  auth: AuthState;
+  events: EventState;
+}
+
+// 루트 리듀서 생성
+const rootReducer = combineReducers({
+  auth: authReducer,
+  events: eventReducer,
+});
+
+const store = createStore(rootReducer);
 
 export default store;
