@@ -1,9 +1,26 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { firestoreService } from "../firebase";
-import { Table, Tbody, Tr, Th, Td, TableContainer } from "@chakra-ui/react";
+import { firestoreService, firestorageService } from "../firebase";
+import {
+  Table,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Button,
+} from "@chakra-ui/react";
 import styled from "styled-components";
+import { RootState } from "../redux/store";
 
 // 유저인포 인터페이스를 정의
 interface UserInfo {
@@ -15,6 +32,7 @@ interface UserInfo {
   position: string;
   team: string;
   uid: string;
+  profileImageUrl?: string;
 }
 // 유저인포 인터페이스를 정의
 
@@ -31,26 +49,73 @@ const Contents = styled.div`
   gap: 72px;
 `;
 
-const UserImg = styled.div`
-  width: 272px;
-  height: 272px;
-  border-radius: 100%;
+const UserImgBox = styled.div`
+  width: 208px;
+  height: 208px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #d9d9d9;
+  border-radius: 100%;
+  overflow: hidden;
+`;
+
+const ProfileBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 `;
 // 스타일드 컴포넌트를 이용한 스타일 정의
 
 const MyInfo = () => {
-  const currentUser = useSelector(
-    (state: { currentUser: string | null }) => state.currentUser,
-  );
+  // 스토어에서 currentUser값을 받아 정의
+
+  const currentUser = useSelector((state: RootState) => state.auth.currentUser);
+  // 스토어에서 currentUser값을 받아 정의
 
   const storedUserInfo = localStorage.getItem("userInfo");
   const loadUserInfoFromLocalStorage = () =>
     JSON.parse(storedUserInfo || "[]") as UserInfo[];
-
   const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
 
-  // 파이어베이스의 users 데이터중에서 현재 id값에 해당하는 정보 조회 함수
+  // 프로필 이미지를 업로드하고 Firestore에 프로필 이미지 URL을 저장하는 함수
+  const handleProfileImageUpload = async (file: File) => {
+    const storageRef = ref(
+      firestorageService,
+      `profile_images/${loadUserInfoFromLocalStorage()[0].uid}`,
+    );
+    const snapshot = await uploadBytes(storageRef, file);
+    const profileImageUrl = await getDownloadURL(snapshot.ref);
+
+    setUserInfo((prevUserInfo) => {
+      const updatedUserInfo = [...prevUserInfo];
+      updatedUserInfo[0].profileImageUrl = profileImageUrl;
+      return updatedUserInfo;
+    });
+    // 프로필 이미지를 업로드하고 Firestore에 프로필 이미지 URL을 저장하는 함수
+
+    // 로컬 스토리지의 userInfo에도 profileImageUrl 업데이트
+    const updatedUserInfo = loadUserInfoFromLocalStorage();
+    updatedUserInfo[0].profileImageUrl = profileImageUrl;
+    localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+    // 로컬 스토리지의 userInfo에도 profileImageUrl 업데이트
+
+    // Firestore에 프로필 이미지 URL을 저장
+    if (loadUserInfoFromLocalStorage()[0].uid) {
+      await updateDoc(
+        doc(firestoreService, `users/${loadUserInfoFromLocalStorage()[0].id}`),
+        {
+          profileImageUrl,
+        },
+      );
+    } else {
+      console.error("currentUser 값이 null입니다.");
+    }
+    // Firestore에 프로필 이미지 URL을 저장
+  };
+
+  // 파이어베이스의 users 데이터 중에서 현재 id값에 해당하는 정보 조회 함수
   const fetcher = async () => {
     const q = query(
       collection(firestoreService, "users"),
@@ -69,9 +134,9 @@ const MyInfo = () => {
       console.error("Error", error);
     }
   };
-  // 파이어베이스의 users 데이터중에서 현재 id값에 해당하는 정보 조회 함수
+  // 파이어베이스의 users 데이터 중에서 현재 id값에 해당하는 정보 조회 함수
 
-  // 컴포넌트가 마운트될 때 실행, 로컬스토리지에 정보가 있으면 로드, 그렇지 않으면 fetcher실행
+  // 컴포넌트가 마운트될 때 실행, 로컬스토리지에 정보가 있으면 로드, 그렇지 않으면 fetcher 실행
   useEffect(() => {
     if (storedUserInfo) {
       setUserInfo(loadUserInfoFromLocalStorage());
@@ -79,16 +144,50 @@ const MyInfo = () => {
       fetcher();
     }
   }, [currentUser]);
-  // 컴포넌트가 마운트될 때 실행, 로컬스토리지에 정보가 있으면 로드, 그렇지 않으면 fetcher실행
+  // 컴포넌트가 마운트될 때 실행, 로컬스토리지에 정보가 있으면 로드, 그렇지 않으면 fetcher 실행
+
+  // 프로필 이미지를 선택하여 업로드하는 함수
+  const handleImageInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleProfileImageUpload(file);
+    }
+  };
+  // 프로필 이미지를 선택하여 업로드하는 함수
 
   return (
     <div>
       <StyledHeading>내 인사정보</StyledHeading>
       <Contents>
-        <UserImg></UserImg>
+        <ProfileBox>
+          <UserImgBox>
+            <img src={userInfo[0]?.profileImageUrl} alt="" />
+          </UserImgBox>
+
+          <div>
+            <Button
+              colorScheme="teal"
+              as="label"
+              htmlFor="userProfileImgUpload"
+              cursor="pointer"
+            >
+              이미지 선택
+            </Button>
+            <input
+              id="userProfileImgUpload"
+              type="file"
+              onChange={handleImageInputChange}
+              style={{ display: "none" }}
+            />
+          </div>
+        </ProfileBox>
         <TableContainer
           borderRadius="12px"
-          border="1px solid"
+          borderTop="1px solid"
+          borderRight="1px solid"
+          borderLeft="1px solid"
           borderColor="gray.100"
           flex="1"
         >
