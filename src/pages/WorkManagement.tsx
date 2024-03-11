@@ -18,8 +18,8 @@ import {
 import { EventClickArg } from "@fullcalendar/core/index.js";
 import EventRegistrationModal from "../components/EventRegistrationModal";
 import EventDetailsModal from "../components/EventDetailsModal";
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, addEvent, deleteEvent, editEvent } from '../redux/store';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, addEvent, deleteEvent, editEvent } from "../redux/store";
 
 const CalendarContainer = styled.div`
   padding: 20px;
@@ -39,7 +39,6 @@ const WorkManagement = () => {
   const [eventContent, setEventContent] = useState("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
-  //const [events, setEvents] = useState<EventData[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editedContent, setEditedContent] = useState("");
@@ -59,17 +58,19 @@ const WorkManagement = () => {
             where("uid", "==", currentUserUID),
           );
           const querySnapshot = await getDocs(eventsQuery);
-          const updatedEvents: EventData[] = querySnapshot.docs.map((doc) => {
-            const { title, start, color, uid } = doc.data();
-            return {
-              id: doc.id,
-              title,
-              start,
-              color,
-              uid,
-            };
-          });
-          dispatch(addEvent(updatedEvents))
+          const updatedEvents: EventData[] = querySnapshot.docs.map<EventData>(
+            (doc) => {
+              const { title, start, color, uid } = doc.data();
+              return {
+                id: doc.id,
+                title,
+                start,
+                color,
+                uid,
+              };
+            },
+          );
+          dispatch(addEvent(updatedEvents));
         }
       } catch (err) {
         console.error("에러:", err);
@@ -127,13 +128,15 @@ const WorkManagement = () => {
           title: editedContent,
         });
 
-        dispatch(editEvent({
-          id: selectedEvent.id,
-          title: editedContent,
-          start: selectedEvent.start,
-          color: selectedEvent.color,
-          uid: selectedEvent.uid,
-        }));
+        dispatch(
+          editEvent({
+            id: selectedEvent.id,
+            title: editedContent,
+            start: selectedEvent.start,
+            color: selectedEvent.color,
+            uid: selectedEvent.uid,
+          }),
+        );
         onClose();
         setSelectedEvent(null);
         setIsEditModalOpen(false);
