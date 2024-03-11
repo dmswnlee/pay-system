@@ -8,7 +8,6 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { firestoreService, firestorageService } from "../firebase";
 import {
   Table,
@@ -20,7 +19,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 import styled from "styled-components";
-import { RootState } from "../redux/store";
 
 // 유저인포 인터페이스를 정의
 interface UserInfo {
@@ -32,7 +30,7 @@ interface UserInfo {
   position: string;
   team: string;
   uid: string;
-  profileImageUrl?: string;
+  profileImageUrl: string;
 }
 // 유저인포 인터페이스를 정의
 
@@ -69,50 +67,27 @@ const ProfileBox = styled.div`
 // 스타일드 컴포넌트를 이용한 스타일 정의
 
 const MyInfo = () => {
-  // 스토어에서 currentUser값을 받아 정의
-
-  const currentUser = useSelector((state: RootState) => state.auth.currentUser);
-  // 스토어에서 currentUser값을 받아 정의
-
-  const storedUserInfo = localStorage.getItem("userInfo");
-  const loadUserInfoFromLocalStorage = () =>
-    JSON.parse(storedUserInfo || "[]") as UserInfo[];
+  const currentUser = sessionStorage.getItem("uid");
   const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
 
   // 프로필 이미지를 업로드하고 Firestore에 프로필 이미지 URL을 저장하는 함수
   const handleProfileImageUpload = async (file: File) => {
-    const storageRef = ref(
-      firestorageService,
-      `profile_images/${loadUserInfoFromLocalStorage()[0].uid}`,
-    );
+    const storageRef = ref(firestorageService, `profile_images/${currentUser}`);
     const snapshot = await uploadBytes(storageRef, file);
     const profileImageUrl = await getDownloadURL(snapshot.ref);
 
+    await updateDoc(doc(firestoreService, `users/${userInfo[0].id}`), {
+      profileImageUrl,
+    });
+    // Firestore에 프로필 이미지 URL을 저장
+
     setUserInfo((prevUserInfo) => {
-      const updatedUserInfo = [...prevUserInfo];
-      updatedUserInfo[0].profileImageUrl = profileImageUrl;
+      const updatedUserInfo = prevUserInfo.map((user) => ({
+        ...user,
+        profileImageUrl: profileImageUrl,
+      }));
       return updatedUserInfo;
     });
-    // 프로필 이미지를 업로드하고 Firestore에 프로필 이미지 URL을 저장하는 함수
-
-    // 로컬 스토리지의 userInfo에도 profileImageUrl 업데이트
-    const updatedUserInfo = loadUserInfoFromLocalStorage();
-    updatedUserInfo[0].profileImageUrl = profileImageUrl;
-    localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
-    // 로컬 스토리지의 userInfo에도 profileImageUrl 업데이트
-
-    // Firestore에 프로필 이미지 URL을 저장
-    if (loadUserInfoFromLocalStorage()[0].uid) {
-      await updateDoc(
-        doc(firestoreService, `users/${loadUserInfoFromLocalStorage()[0].id}`),
-        {
-          profileImageUrl,
-        },
-      );
-    } else {
-      console.error("currentUser 값이 null입니다.");
-    }
-    // Firestore에 프로필 이미지 URL을 저장
   };
 
   // 파이어베이스의 users 데이터 중에서 현재 id값에 해당하는 정보 조회 함수
@@ -129,7 +104,6 @@ const MyInfo = () => {
       );
 
       setUserInfo(firestoreUserInfo);
-      localStorage.setItem("userInfo", JSON.stringify(firestoreUserInfo));
     } catch (error) {
       console.error("Error", error);
     }
@@ -138,11 +112,7 @@ const MyInfo = () => {
 
   // 컴포넌트가 마운트될 때 실행, 로컬스토리지에 정보가 있으면 로드, 그렇지 않으면 fetcher 실행
   useEffect(() => {
-    if (storedUserInfo) {
-      setUserInfo(loadUserInfoFromLocalStorage());
-    } else {
-      fetcher();
-    }
+    fetcher();
   }, [currentUser]);
   // 컴포넌트가 마운트될 때 실행, 로컬스토리지에 정보가 있으면 로드, 그렇지 않으면 fetcher 실행
 

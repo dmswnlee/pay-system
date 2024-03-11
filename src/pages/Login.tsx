@@ -48,7 +48,7 @@ const Login = () => {
   const logOut = () => {
     authService.signOut();
     dispatch(setCurrentUser(null));
-    localStorage.removeItem("userInfo");
+    sessionStorage.removeItem("uid");
   };
   // 로그아웃
 
@@ -57,13 +57,13 @@ const Login = () => {
     const unsubscribe = onAuthStateChanged(authService, (user) => {
       if (user) {
         dispatch(setCurrentUser(user.uid));
+        sessionStorage.setItem("uid", user.uid);
       } else {
         dispatch(setCurrentUser(null));
       }
     });
     return () => unsubscribe();
   }, [dispatch]);
-  console.log(currentUser);
   // useEffect를 사용하여 로그인 상태 변화 감지
 
   return (

@@ -1,5 +1,5 @@
 import { createStore, Action, combineReducers } from "redux";
-import { EventData } from '../pages/WorkManagement';
+import { EventData } from "../pages/WorkManagement";
 
 // 초기 상태 정의
 interface AuthState {
@@ -21,7 +21,7 @@ const initialEventState: EventState = {
 
 // 액션 타입 정의
 enum AuthActionTypes {
-  SET_CURRENT_USER = "SET_CURRENT_USER", 
+  SET_CURRENT_USER = "SET_CURRENT_USER",
 }
 enum EventActionTypes {
   ADD_EVENT = "ADD_EVENT",
@@ -74,7 +74,7 @@ export const editEvent = (event: EventData): EditEventAction => ({
 // login 리듀서 함수 정의
 const authReducer = (
   state: AuthState = initialAuthState,
-  action: SetCurrentUserAction
+  action: SetCurrentUserAction,
 ): AuthState => {
   switch (action.type) {
     case AuthActionTypes.SET_CURRENT_USER:
@@ -90,7 +90,7 @@ const authReducer = (
 // workManagement 리듀서 함수 정의
 const eventReducer = (
   state: EventState = initialEventState,
-  action: AddEventAction | DeleteEventAction | EditEventAction
+  action: AddEventAction | DeleteEventAction | EditEventAction,
 ): EventState => {
   switch (action.type) {
     case EventActionTypes.ADD_EVENT:
@@ -107,7 +107,9 @@ const eventReducer = (
       return {
         ...state,
         events: state.events.map((event) =>
-          event.id === action.payload.id ? { ...event, title: action.payload.title } : event
+          event.id === action.payload.id
+            ? { ...event, title: action.payload.title }
+            : event,
         ),
       };
     default:
