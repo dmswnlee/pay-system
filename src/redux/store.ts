@@ -46,7 +46,7 @@ export interface AddEventAction {
   payload: EventData;
 }
 
-export const addEvent = (event: EventData): AddEventAction => ({
+export const addEvent = (event: EventData | EventData[]) => ({
   type: EventActionTypes.ADD_EVENT,
   payload: event,
 });
@@ -56,7 +56,7 @@ export interface DeleteEventAction {
   payload: string;
 }
 
-export const deleteEvent = (eventId: string): DeleteEventAction => ({
+export const deleteEvent = (eventId: string) => ({
   type: EventActionTypes.DELETE_EVENT,
   payload: eventId,
 });
@@ -66,7 +66,7 @@ export interface EditEventAction {
   payload: EventData;
 }
 
-export const editEvent = (event: EventData): EditEventAction => ({
+export const editEvent = (event: EventData) => ({
   type: EventActionTypes.EDIT_EVENT,
   payload: event,
 });
