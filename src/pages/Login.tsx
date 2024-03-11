@@ -1,7 +1,11 @@
 import { FormEvent, useEffect } from "react";
 import { Dispatch } from "redux";
 import { useDispatch, useSelector } from "react-redux";
-import { SetCurrentUserAction, setCurrentUser } from "../redux/store";
+import {
+  RootState,
+  SetCurrentUserAction,
+  setCurrentUser,
+} from "../redux/store";
 import { authService } from "../firebase";
 import {
   createUserWithEmailAndPassword,
@@ -13,7 +17,7 @@ const Login = () => {
   const dispatch: Dispatch<SetCurrentUserAction> = useDispatch();
 
   const currentUser: string | null = useSelector(
-    (state: { currentUser: string | null }) => state.currentUser,
+    (state: RootState) => state.auth.currentUser,
   );
 
   // 회원가입
