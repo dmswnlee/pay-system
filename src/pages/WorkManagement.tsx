@@ -73,7 +73,7 @@ const WorkManagement = () => {
           dispatch(addEvent(updatedEvents));
         }
       } catch (err) {
-        console.error("에러:", err);
+        console.error("Error:", err);
       }
     };
     fetchEventData();
@@ -99,11 +99,9 @@ const WorkManagement = () => {
 
         dispatch(addEvent(newEvent));
         handleCloseModal();
-      } else {
-        console.error("일정 내용, 날짜, 색상을 모두 입력하세요.");
       }
     } catch (err) {
-      console.error("에러:", err);
+      console.error("Error:", err);
     }
   };
 
@@ -117,7 +115,7 @@ const WorkManagement = () => {
         setSelectedEvent(null);
       }
     } catch (err) {
-      console.error("에러:", err);
+      console.error("Error:", err);
     }
   };
 
@@ -144,7 +142,7 @@ const WorkManagement = () => {
         console.error("수정할 내용을 입력하세요.");
       }
     } catch (err) {
-      console.error("에러:", err);
+      console.error("Error:", err);
     }
   };
 
@@ -177,6 +175,11 @@ const WorkManagement = () => {
     }
   };
 
+  const handleSelectEvent = () => {
+    onClose();
+    setSelectedEvent(null);
+  };
+
   return (
     <CalendarContainer>
       <FullCalendar
@@ -191,7 +194,6 @@ const WorkManagement = () => {
         events={events}
         eventClick={handleEventClick}
       />
-      {/* 일정등록 모달 */}
       <EventRegistrationModal
         isCreateModalOpen={isCreateModalOpen}
         handleCloseModal={handleCloseModal}
@@ -201,13 +203,9 @@ const WorkManagement = () => {
         eventContent={eventContent}
         handleChange={handleChange}
       />
-      {/* 등록일정확인 모달 */}
       <EventDetailsModal
         isOpen={isOpen && selectedEvent !== null}
-        onClose={() => {
-          onClose();
-          setSelectedEvent(null);
-        }}
+        onClose={handleSelectEvent}
         selectedEvent={selectedEvent}
         handleDeleteEvent={handleDeleteEvent}
         isEditModalOpen={isEditModalOpen}

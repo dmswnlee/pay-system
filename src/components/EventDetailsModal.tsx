@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { CalendarIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import styled from "styled-components";
+import { ChangeEvent } from "react";
 
 const ContentContainer = styled.div`
   display: flex;
@@ -47,6 +48,14 @@ const EventDetailsModal = ({
   handleEditEvent,
   setIsEditModalOpen,
 }: EventDetailsModalProps) => {
+  const handleModify = () => {
+    setEditedContent(selectedEvent?.title || "");
+    setIsEditModalOpen(true);
+  };
+
+  const handleChangeContent = (e: ChangeEvent<HTMLTextAreaElement>) =>
+    setEditedContent(e.target.value);
+
   return (
     <Modal isOpen={isOpen && selectedEvent !== null} onClose={onClose}>
       <ModalOverlay />
@@ -60,11 +69,10 @@ const EventDetailsModal = ({
           </ContentContainer>
           <ContentContainer>
             <EditIcon />
-            {/* <p>{selectedEvent?.title}</p> */}
             {isEditModalOpen ? (
               <Textarea
                 value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
+                onChange={handleChangeContent}
                 placeholder="수정할 내용을 입력하세요."
                 size="sm"
               />
@@ -87,14 +95,7 @@ const EventDetailsModal = ({
               저장
             </Button>
           ) : (
-            <Button
-              colorScheme="teal"
-              size="md"
-              onClick={() => {
-                setEditedContent(selectedEvent?.title || ""); // 원래의 값을 그대로 설정
-                setIsEditModalOpen(true);
-              }}
-            >
+            <Button colorScheme="teal" size="md" onClick={handleModify}>
               수정
             </Button>
           )}
