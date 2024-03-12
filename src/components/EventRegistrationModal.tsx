@@ -10,7 +10,7 @@ import {
   SimpleGrid,
   Textarea,
 } from "@chakra-ui/react";
-import { ChangeEvent } from 'react';
+import { ChangeEvent } from "react";
 
 interface EventRegistrationModalProps {
   isCreateModalOpen: boolean;
@@ -30,7 +30,7 @@ const EventRegistrationModal = ({
   handleColorChange,
   eventContent,
   handleChange,
-} : EventRegistrationModalProps) => {
+}: EventRegistrationModalProps) => {
   return (
     <Modal isOpen={isCreateModalOpen} onClose={handleCloseModal}>
       <ModalOverlay />

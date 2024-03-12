@@ -80,8 +80,8 @@ const SalaryDetailModal = ({
     }
   };
 
-  const employee = employees[0]; 
-  const salary = salaryData[0]; 
+  const employee = employees[0];
+  const salary = salaryData[0];
 
   return (
     <>
