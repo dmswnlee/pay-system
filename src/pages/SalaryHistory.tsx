@@ -9,9 +9,10 @@ import {
 } from "@chakra-ui/react";
 import styled from "styled-components";
 import SalaryDetailModal from "../components/SalaryDetailModal";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { authService, firestoreService } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { useLocalStorageState } from "../hook/useLocalStorageState";
 
 const MainTitle = styled.h1`
   font-size: 32px;
@@ -59,8 +60,14 @@ export interface Salary {
 }
 
 const SalaryHistory = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [salaryData, setSalaryData] = useState<Salary[]>([]);
+  const [employees, setEmployees] = useLocalStorageState<Employee[]>(
+    "employees",
+    [],
+  );
+  const [salaryData, setSalaryData] = useLocalStorageState<Salary[]>(
+    "salaryData",
+    [],
+  );
 
   useEffect(() => {
     const fetchData = async () => {
