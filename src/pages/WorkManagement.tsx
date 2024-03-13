@@ -18,14 +18,12 @@ import {
 import { EventClickArg } from "@fullcalendar/core/index.js";
 import EventRegistrationModal from "../components/EventRegistrationModal";
 import EventDetailsModal from "../components/EventDetailsModal";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, addEvent, deleteEvent, editEvent } from "../redux/store";
 
 const CalendarContainer = styled.div`
   padding: 20px;
 `;
 
-export interface EventData {
+interface EventData {
   id: string;
   title: string;
   start: string;
@@ -39,12 +37,11 @@ const WorkManagement = () => {
   const [eventContent, setEventContent] = useState("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
+  const [events, setEvents] = useState<EventData[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editedContent, setEditedContent] = useState("");
-
-  const dispatch = useDispatch();
-  const events = useSelector((state: RootState) => state.events.events);
 
   const user = authService.currentUser;
   const currentUserUID = user?.uid;
@@ -58,19 +55,17 @@ const WorkManagement = () => {
             where("uid", "==", currentUserUID),
           );
           const querySnapshot = await getDocs(eventsQuery);
-          const updatedEvents: EventData[] = querySnapshot.docs.map<EventData>(
-            (doc) => {
-              const { title, start, color, uid } = doc.data();
-              return {
-                id: doc.id,
-                title,
-                start,
-                color,
-                uid,
-              };
-            },
-          );
-          dispatch(addEvent(updatedEvents));
+          const updatedEvents: EventData[] = querySnapshot.docs.map((doc) => {
+            const { title, start, color, uid } = doc.data();
+            return {
+              id: doc.id,
+              title,
+              start,
+              color,
+              uid,
+            };
+          });
+          setEvents(updatedEvents);
         }
       } catch (err) {
         console.error("Error:", err);
@@ -97,7 +92,7 @@ const WorkManagement = () => {
           uid: currentUserUID || "",
         };
 
-        dispatch(addEvent(newEvent));
+        setEvents((prevEvents: EventData[]) => [newEvent, ...prevEvents]);
         handleCloseModal();
       }
     } catch (err) {
@@ -110,7 +105,10 @@ const WorkManagement = () => {
       if (selectedEvent) {
         await deleteDoc(doc(firestoreService, "schedule", selectedEvent.id));
 
-        dispatch(deleteEvent(selectedEvent.id));
+        setEvents((prevEvents: EventData[]) =>
+          prevEvents.filter((event) => event.id !== selectedEvent.id),
+        );
+
         onClose();
         setSelectedEvent(null);
       }
@@ -126,20 +124,16 @@ const WorkManagement = () => {
           title: editedContent,
         });
 
-        dispatch(
-          editEvent({
-            id: selectedEvent.id,
-            title: editedContent,
-            start: selectedEvent.start,
-            color: selectedEvent.color,
-            uid: selectedEvent.uid,
-          }),
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.id === selectedEvent.id
+              ? { ...event, title: editedContent }
+              : event,
+          ),
         );
         onClose();
         setSelectedEvent(null);
         setIsEditModalOpen(false);
-      } else {
-        console.error("수정할 내용을 입력하세요.");
       }
     } catch (err) {
       console.error("Error:", err);
