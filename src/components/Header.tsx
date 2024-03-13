@@ -8,6 +8,7 @@ import { authService } from "../firebase";
 import { Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
+// 스타일드 컴포넌트를 이용한 스타일 정의
 const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
@@ -36,6 +37,7 @@ const StyledLink = styled(Link)<{ active?: string }>`
       color: #171923;
     `}
 `;
+// 스타일드 컴포넌트를 이용한 스타일 정의
 
 const Header: React.FC = () => {
   const dispatch: Dispatch<SetCurrentUserAction> = useDispatch();
