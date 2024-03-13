@@ -25,18 +25,19 @@ const Login = () => {
   const dispatch: Dispatch<SetCurrentUserAction> = useDispatch();
   const navigate = useNavigate();
   const { loading, setLoadingState } = usePromiseLoading();
-  const [errorAlert, setErrorAlert] = useState(false); // State to control error alert
-  const [errorAlertMessage, setErrorAlertMessage] = useState(""); // State to store error message
+  const [errorAlert, setErrorAlert] = useState(false);
+  const [errorAlertMessage, setErrorAlertMessage] = useState("");
   const cancelRef = useRef(null);
+
   // 로그인
   const logIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setLoadingState(true);
     const formData = new FormData(e.currentTarget);
     const email: string = formData.get("email") as string;
     const password: string = formData.get("password") as string;
 
+    // 에러 체크
     try {
       await signInWithEmailAndPassword(authService, email, password);
       navigate("/MyInfo");
@@ -53,6 +54,7 @@ const Login = () => {
           errorMessage = "이메일 형식이 올바르지 않습니다.";
           break;
         default:
+          errorMessage;
           break;
       }
       setErrorAlertMessage(errorMessage);
@@ -104,7 +106,7 @@ const Login = () => {
       </Box>
       <AlertDialog
         isOpen={errorAlert}
-        leastDestructiveRef={cancelRef} // 여기에 leastDestructiveRef 추가
+        leastDestructiveRef={cancelRef}
         onClose={() => setErrorAlert(false)}
       >
         <AlertDialogOverlay>
