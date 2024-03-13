@@ -16,25 +16,23 @@ import { useLocalStorageState } from "../hook/useLocalStorageState";
 
 const MainTitle = styled.h1`
   font-size: 32px;
-  font-weight: bold;
+  margin-top: 56px;
 `;
 
 const SubTitle = styled.h2`
   font-size: 24px;
-  font-weight: bold;
+  margin-bottom: 8px;
 `;
 
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 10px;
+  gap: 64px;
 `;
 
 const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
 `;
 
 export interface Employee {
@@ -142,7 +140,14 @@ const SalaryHistory = () => {
       <MainTitle>급여 내역</MainTitle>
       <SubContainer>
         <SubTitle>직원 정보</SubTitle>
-        <TableContainer>
+        <TableContainer
+          borderRadius="12px"
+          borderTop="1px solid"
+          borderRight="1px solid"
+          borderLeft="1px solid"
+          borderColor="gray.100"
+          flex="1"
+        >
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -167,7 +172,14 @@ const SalaryHistory = () => {
       </SubContainer>
       <SubContainer>
         <SubTitle>급여 명세</SubTitle>
-        <TableContainer>
+        <TableContainer
+          borderRadius="12px"
+          borderTop="1px solid"
+          borderRight="1px solid"
+          borderLeft="1px solid"
+          borderColor="gray.100"
+          flex="1"
+        >
           <Table variant="simple">
             <Thead>
               <Tr>
