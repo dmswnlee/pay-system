@@ -34,7 +34,7 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
         <sub><b>전유덕</b><br></sub>
     </td>
     <td align="center">
-        <img src="" width="150px;" alt="lej"/><br />
+        <img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/lej.png?raw=true" width="150px;" alt="lej"/><br />
         <sub><b>이은주</b><br></sub>
     </td>
     <td align="center">
@@ -58,6 +58,15 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
 <br>
 
 ## 기능구현
+
+**데이터 정보** 
+
+* id : jyd@gmail.com 
+* id : lej@gmail.com
+* id : ssm@gmail.com 
+* pw : 123456
+
+<br>
 
 ### 전유덕
 
@@ -87,6 +96,37 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
 ## 구현페이지
 
 **로그인 페이지**
-<img src="" width=1678   alt="" />
+<img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/01.%EB%A1%9C%EA%B7%B8%EC%9D%B8.png?raw=true" width=1678   alt="로그인 페이지" />
 
 <br>
+
+**인사정보 페이지**
+<img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/02.%EC%9D%B8%EC%82%AC%EC%A0%95%EB%B3%B4.png?raw=true" width=1678   alt="인사정보 페이지" />
+
+<br>
+
+**급여내역 페이지**
+<img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/03.%EA%B8%89%EC%97%AC%EB%82%B4%EC%97%AD.png?raw=true" width=1678   alt="급여내역 페이지" />
+
+<br>
+
+**급여내역 페이지 - 급여상세내역**
+<img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/04.%EA%B8%89%EC%97%AC%EC%83%81%EC%84%B8%EB%82%B4%EC%97%AD.png?raw=true" width=1678   alt="급여상세내역" />
+
+<br>
+
+**정정신청 페이지**
+<img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/08.gif?raw=true" width=1678   alt="정정신청페이지" />
+
+<br>
+
+**정정내역 페이지**
+<img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/06.%EC%A0%95%EC%A0%95%EB%82%B4%EC%97%AD.png?raw=true" width=1678   alt="정정내역페이지" />
+
+<br>
+
+**업무관리 페이지**
+<img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/09.gif?raw=true" width=1678   alt="업무관리페이지" />
+
+<br>
+
