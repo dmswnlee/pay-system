@@ -18,6 +18,7 @@ import {
 import { EventClickArg } from "@fullcalendar/core/index.js";
 import EventRegistrationModal from "../components/EventRegistrationModal";
 import EventDetailsModal from "../components/EventDetailsModal";
+import { useLocalStorageState } from '../hook/useLocalStorageState';
 
 const CalendarContainer = styled.div`
   padding: 20px;
@@ -37,8 +38,8 @@ const WorkManagement = () => {
   const [eventContent, setEventContent] = useState("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
-  const [events, setEvents] = useState<EventData[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+  const [events, setEvents] = useLocalStorageState<EventData[]>("events", []);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editedContent, setEditedContent] = useState("");
