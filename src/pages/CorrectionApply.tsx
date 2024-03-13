@@ -1,23 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import {
-  addDoc,
-  collection,
-} from 'firebase/firestore';
-import styled from 'styled-components';
+import { addDoc, collection } from "firebase/firestore";
+import styled from "styled-components";
 
-import {
-  Button,
-  Select,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Button, Select, useDisclosure } from "@chakra-ui/react";
 
-import MyModal from '../components/MyModal';
-import Title from '../components/Title';
-import {
-  authService,
-  firestoreService,
-} from '../firebase';
+import MyModal from "../components/MyModal";
+import Title from "../components/Title";
+import { authService, firestoreService } from "../firebase";
 
 const Wrapper = styled.div`
   padding-top: 58px;
@@ -110,15 +100,12 @@ const CorrectionApply = () => {
       onOpen();
     } else {
       try {
-        const doc = await addDoc(
-          collection(firestoreService, "correctionapplyhistory"),
-          {
-            applyDate: formatDate(form.year, form.month, form.day),
-            content: form.context,
-            uid: user?.uid,
-            status: "결제 대기",
-          },
-        );
+        await addDoc(collection(firestoreService, "correctionapplyhistory"), {
+          applyDate: formatDate(form.year, form.month, form.day),
+          content: form.context,
+          uid: user?.uid,
+          status: "결제 대기",
+        });
         console.log(form.year, form.month, form.day, form.context);
         setForm({ year: "2024년", month: "1월", day: "1일", context: "" });
         setModalText("급여 정정 신청이 완료되었습니다.");
