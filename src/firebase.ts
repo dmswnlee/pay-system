@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBSouoTlHT0j6jxTRKbQkIgqVDirEfBo-A",
-  authDomain: "pay-system-ced41.firebaseapp.com",
-  projectId: "pay-system-ced41",
-  storageBucket: "pay-system-ced41.appspot.com",
-  messagingSenderId: "1047121915564",
-  appId: "1:1047121915564:web:d53241fdf376c9958d3909",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
