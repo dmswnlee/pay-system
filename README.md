@@ -38,7 +38,7 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
         <sub><b>이은주</b><br></sub>
     </td>
     <td align="center">
-        <img src="" width="150px;" alt="ssm"/><br />
+        <img src="https://avatars.githubusercontent.com/u/42069999?v=4" width="150px;" alt="ssm"/><br />
         <sub><b>심소망</b><br></sub>
     </td>
   </tr>
