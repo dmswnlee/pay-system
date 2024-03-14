@@ -42,7 +42,7 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
         <sub><b>심소망</b><br></sub>
     </td>
 
-  </tr>
+  </tr>  </br>
  <tr>
     <td align="center">
         <sub><b>로그인, 인사정보 페이지</b><br></sub>
