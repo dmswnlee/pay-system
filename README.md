@@ -30,7 +30,7 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
 <table>
   <tr>
     <td align="center">
-        <img src="" width="150px;" alt="jyd"/><br />
+        <img src="https://github.com/dmswnlee/pay-system/blob/main/src/assets/img/jyd.png" width="150px;" alt="jyd"/><br />
         <sub><b>전유덕</b><br></sub>
     </td>
     <td align="center">
@@ -68,6 +68,16 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
 <br>
 
 ### 전유덕
+로그인 페이지
+
+* 이메일, 비밀번호를 사용한 로그인 기능
+* 로그인 오류발생시 알람모달
+* 로그인하지 않은 상태에서 페이지 접근시 로그인 페이지로 이동
+
+인사정보 페이지
+
+* 로그인한 직원 인사정보 노출
+* 파이어베이스 스토리지를 이용한 프로필이미지 노출 및 수정기능
 
 <br>
 
