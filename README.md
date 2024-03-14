@@ -38,9 +38,10 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
         <sub><b>이은주</b><br></sub>
     </td>
     <td align="center">
-        <img src="" width="150px;" alt="ssm"/><br />
+        <img width="322" alt="스크린샷 2024-03-14 오전 10 11 59" src="https://github.com/dmswnlee/pay-system/assets/42069999/ec1bc984-0e11-4a7a-bec9-c0bf8cfc1b11">><br />
         <sub><b>심소망</b><br></sub>
     </td>
+
   </tr>
  <tr>
     <td align="center">
