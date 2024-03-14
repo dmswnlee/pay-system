@@ -128,6 +128,9 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
 **급여내역 페이지**
 <img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/03.%EA%B8%89%EC%97%AC%EB%82%B4%EC%97%AD.png?raw=true" width=1678   alt="급여내역 페이지" />
 
+- 직원정보와 간단한 급여 정보를 확인할 수 있습니다.
+- 열람하기 버튼 클릭 시 급여 상세내역 모달창이 뜹니다. 
+
 <br>
 
 **급여내역 페이지 - 급여상세내역**
@@ -153,6 +156,12 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
 
 **업무관리 페이지**
 <img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/09.gif?raw=true" width=1678   alt="업무관리페이지" />
+
+- fullcalendar 라이브러리를 사용해 캘린더를 구현했습니다.
+- 해당 날짜를 클릭하면 일정을 등록할 수 있는 모달창이 뜹니다.
+- 셀렉트 박스를 통해 등록할 일정의 색상을 선택할 수 있습니다. 
+- 등록된 일정을 클릭하면 등록된 날짜, 일정의 내용을 확인할 수 있습니다.
+- 수정 버튼을 클릭하면 수정할 수 있는 텍스트박스가 생기고 수정가능합니다.
 
 <br>
 
