@@ -128,11 +128,17 @@ React.js / TypeScript / styled-component / firebase / redux / chakra UI
 **정정신청 페이지**
 <img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/08.gif?raw=true" width=1678   alt="정정신청페이지" />
 
+- 셀렉션 박스로 날짜를 선택해 데이터를 입력 할 수 있습니다.
+- 날짜나 내용이 빈값일때 제출버튼 클릭시 값을 입력해달라는 모달창이 뜹니다.
+- 내용을 모두 기입할시엔 입력 성공했다는 모달창이 뜹니다.  
 <br>
 
 **정정내역 페이지**
 <img src="https://github.com/dmswnlee/pay-system/blob/feat-eunjoo/src/assets/img/06.%EC%A0%95%EC%A0%95%EB%82%B4%EC%97%AD.png?raw=true" width=1678   alt="정정내역페이지" />
 
+- 정정신청 페이지에서 입력한 데이터들이 조회됩니다.
+- 날짜는 20xx.xx.xx 식으로 조회됩니다.
+- 삭제버튼 클릭시 해당 리스트의 데이터가 삭제됩니다. 
 <br>
 
 **업무관리 페이지**
